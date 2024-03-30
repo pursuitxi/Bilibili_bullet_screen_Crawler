@@ -125,7 +125,8 @@ class BilibiliSpider:
                                     headers=self.headers)
             # print(response.text)
             danmus = re.findall(r'.*?([\u4E00-\u9FA5]+).*?', response.text)
-            await self.store_csv(danmus, bvid=bvid)
+            data = {'date': date, 'content': danmus}
+            await self.store_csv(data, bvid=bvid)
         utils.logger.info(f"[BilibiliCrawler.get_danmu_single] bvid: {bvid} crawler finish !")
 
     async def get_danmu_task(self, oid_and_public_month, semaphore: asyncio.Semaphore):
@@ -149,14 +150,16 @@ class BilibiliSpider:
         await asyncio.gather(*task_list)
         utils.logger.info(f"[BilibiliCrawler.get_danmu_list] bilibili danmu crawler finish !")
 
-    async def store_csv(self, danmus, bvid):
+    async def store_csv(self, data, bvid):
 
+        danmus = data['content']
+        date = data['date']
         file_name = 'data/' + bvid + '-' + str(datetime.date.today()) + '.csv'
         with open(file_name, 'a', encoding='utf-8', newline='') as f:
             writer = csv.writer(f)
             for danmu in danmus:
                 utils.logger.info(f"[BilibiliCrawler.get_danmu_list] get bvid: {bvid}, danmu content : {danmu}")
-                writer.writerow([danmu])
+                writer.writerow([date,danmu])
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Bilibili danmu crawler program.')
