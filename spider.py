@@ -158,7 +158,7 @@ class BilibiliSpider:
         with open(file_name, 'a', encoding='utf-8', newline='') as f:
             writer = csv.writer(f)
             for danmu in danmus:
-                utils.logger.info(f"[BilibiliCrawler.get_danmu_list] get bvid: {bvid}, danmu content : {danmu}")
+                utils.logger.info(f"[BilibiliCrawler.get_danmu_list] get bvid: {bvid}, date: {date}, danmu content : {danmu}")
                 writer.writerow([date,danmu])
 
 if __name__ == '__main__':
